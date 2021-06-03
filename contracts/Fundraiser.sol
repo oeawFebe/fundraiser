@@ -15,7 +15,10 @@ contract Fundraiser is Ownable {
         uint256 date;
     }
     mapping(address=>Donation[]) private _donations;
+    event DonationReceived(address indexed donor,uint256 value);
+    event Withdraw(uint256 amount);
     uint256 public totalDonations;
+    uint public donationsCount;
     constructor(string memory _name, string memory _url, string memory _imageURL, string memory _description, address payable _beneficiary, address _custodian) public {
         name=_name;
         url=_url;
@@ -36,6 +39,8 @@ contract Fundraiser is Ownable {
         });
         _donations[msg.sender].push(donation);
         totalDonations=totalDonations.add(msg.value);
+        donationsCount++;
+        emit DonationReceived(msg.sender, msg.value);
     }
     function myDonations() public view returns(uint256[] memory values,uint256[] memory dates) {
         uint256 count=myDonationsCount();
@@ -46,6 +51,16 @@ contract Fundraiser is Ownable {
             values[i]=donation.value;
             dates[i]=donation.date;
         }
+    }
+    function withdraw() public onlyOwner {
+        uint256 balance=address(this).balance;
+        beneficiary.transfer(balance);
+        emit Withdraw(balance);
+    }
+
+    function () external payable {
+        totalDonations=totalDonations.add(msg.value);
+        donationsCount++;
     }
     
 }
