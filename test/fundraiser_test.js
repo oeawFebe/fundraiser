@@ -22,7 +22,6 @@ contract("Fundraiser",accounts=>{
             description,
             beneficiary,
             custodian,
-            // owner
         )
     });
 
@@ -58,11 +57,11 @@ contract("Fundraiser",accounts=>{
             assert.equal(actual,beneficiary,"beneficiary address should match");
         });
 
-        it("gets the custodian",async()=>{
-            const actual=await fundraiser.custodian();
+        // it("gets the custodian",async()=>{
+        //     const actual=await fundraiser.custodian();
             
-            assert.equal(actual,custodian,"custodian address should match");
-        });
+        //     assert.equal(actual,custodian,"custodian address should match");
+        // });
 
         it("gets the owner",async()=>{
             const actual=await fundraiser.owner();
